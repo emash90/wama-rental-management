@@ -1,0 +1,1 @@
+# wama-rental-management
