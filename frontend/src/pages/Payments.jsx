@@ -1,7 +1,8 @@
 import React from 'react'
 import NavBar from '../components/NavBar'
 import SideNav from '../components/SideNav'
-import { Container, Row, Col, Table } from 'react-bootstrap';
+import PaymentFilters from '../components/PaymentFilters'
+import { Container, Row, Col, Table, Button, Form } from 'react-bootstrap';
 
 const Payments = () => {
     const payments = [
@@ -57,7 +58,21 @@ const Payments = () => {
                 <SideNav />
             </Col>
             <Col md={9} className="p-3">
-                <h1>Payments</h1>
+                <Row>
+                    <Col>
+                        <div className="d-flex justify-content-between" style={{ marginBottom: '1rem' }}>
+                            <h1>Payments</h1>
+                            <Button variant="primary" >Add Payment</Button>
+                        </div>
+                    </Col>
+                </Row>
+                <Row >
+                    <h4>Filters</h4>
+                    <Col className='mb-3'>
+                        < PaymentFilters />
+                    </Col>
+                    <hr></hr>
+                </Row>
                 <Table striped bordered hover>
                     <thead>
                         <tr>

@@ -1,10 +1,13 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
 import SideNav from '../components/SideNav';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 
 const Dashboard = () => {
+    const linkStyle = {
+        textDecoration: 'none'
+    }
   return (
     <>
       <NavBar />
@@ -19,50 +22,77 @@ const Dashboard = () => {
                     <h1>Dashboard</h1>
                 </Col>
             </Row>
-            <Row>
+            <Row className="mt-3" xs={1} md={2} >
                 <Col>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Houses</Card.Title>
-                            <Card.Text>
-                                <div className="d-flex justify-content-between">
-                                    <p>Number of houses</p>
-                                    <p>10</p>
-                                </div>
-                                <div className="d-flex justify-content-between">
-                                    <p>Number of occupied houses</p>
-                                    <p>5</p>
-                                </div>
-                                <div className="d-flex justify-content-between">
-                                    <p>Number of vacant houses</p>
-                                    <p>5</p>
-                                </div>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
+                    <Link to={'/houses'} style={linkStyle} >
+                        <Card className="mb-3" >
+                            <Card.Body>
+                                <Card.Title>Houses</Card.Title>
+                                <Card.Text>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Number of houses</p>
+                                        <p>10</p>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Number of occupied houses</p>
+                                        <p>5</p>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Number of vacant houses</p>
+                                        <p>5</p>
+                                    </div>
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Link>
                 </Col>
                 <Col>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Tenants</Card.Title>
-                            <Card.Text>
-                                <div className="d-flex justify-content-between">
-                                    <p>Number of tenants</p>
-                                    <p>10</p>
-                                </div>
-                                <div className="d-flex justify-content-between">
-                                    <p>Number of active tenants</p>
-                                    <p>5</p>
-                                </div>
-                                <div className="d-flex justify-content-between">
-                                    <p>Number of inactive tenants</p>
-                                    <p>5</p>
-                                </div>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                    </Col>
-                    </Row>
+                    <Link to={'/tenants'} style={linkStyle} >
+                        <Card className="mb-3">
+                            <Card.Body>
+                                <Card.Title>Tenants</Card.Title>
+                                <Card.Text>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Number of tenants</p>
+                                        <p>10</p>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Number of active tenants</p>
+                                        <p>5</p>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Number of inactive tenants</p>
+                                        <p>5</p>
+                                    </div>
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Link>
+                </Col>
+                <Col>
+                    <Link to={'/payments'} style={linkStyle}>
+                        <Card className="mb-3">
+                            <Card.Body>
+                                <Card.Title>Payments</Card.Title>
+                                <Card.Text>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Number of payments</p>
+                                        <p>10</p>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Amount paid</p>
+                                        <p>100000</p>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <p>Amount pending</p>
+                                        <p>50000</p>
+                                    </div>
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Link>
+                </Col>
+            </Row>
           </Col>
         </Row>
       </Container>

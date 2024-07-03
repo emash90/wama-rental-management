@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
 import SideNav from '../components/SideNav';
+import HouseFilters from '../components/HouseFilters'
 import AddHouseModal from '../components/AddHouseModal';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
@@ -65,6 +66,13 @@ const Houses = () => {
                                     <Button variant="primary" onClick={handleShowModal}>Add House</Button>
                                 </div>
                             </Col>
+                        </Row>
+                        <Row >
+                            <h4>Filters</h4>
+                            <Col className='mb-3'>
+                                < HouseFilters />
+                            </Col>
+                            <hr></hr>
                         </Row>
                         <Row className="mb-3">
                             {houses.map((house, index) => (
