@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
-    tenant: {
+    tenant_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tenants',
         required: true
     },
-    house: {
+    house_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Houses',
         required: true
@@ -15,15 +15,34 @@ const paymentSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    month: {
+    amount_paid: {
+        type: Number,
+        required: true
+    },
+    balance: {
+        type: Number,
+        required: true
+    },
+    date_paid: {
+        type: Date,
+        required: true
+    },
+    full_payment: {
+        type: Boolean,
+        required: true
+    },
+    payment_mode: {
         type: String,
         required: true
     },
-    year: {
-        type: Number,
+    month: {
+        type: String,
         required: true
     }
-}, { timestamps: true });
+}, {
+    timestamps: true
+});
+
 
 
 module.exports = mongoose.model('Payments', paymentSchema);

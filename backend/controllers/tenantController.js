@@ -1,27 +1,30 @@
 const Tenant = require('../models/tenantModel');
+const House = require('../models/houseModel');
 
 const tenantController = {
     add_tenant: async (req, res) => {
         try {
-            const { name, email, phone, house, rent } = req.body;
+            console.log("req.body", req.body);
+            const { tenantName, tenantPhone, tenantHouse, tenantRent } = req.body;
 
-            const tenant = await Tenant.findOne({ phone });
-
-            if (tenant) return res.status(400).json({ msg: "The phone number already exists." });
+            const tenant = await Tenant.findOne({ tenantPhone });
+            console.log("tenant", tenant);
+            if (tenant) {
+                return res.status(400).json({ msg: "The phone number already exists." });
+            }
 
             const newTenant = new Tenant({
-                name, email, phone, house, rent
+                tenantName, tenantPhone, tenantHouse, tenantRent
             });
+            console.log("newTenant", newTenant);
 
             await newTenant.save();
-
             return res.status(201).json({
                 tenant: {
-                    name: newTenant.name,
-                    email: newTenant.email,
-                    phone: newTenant.phone,
-                    house: newTenant.house,
-                    rent: newTenant.rent
+                    tenantName: newTenant.tenantName,
+                    tenantPhone: newTenant.tenantPhone,
+                    tenantHouse: newTenant.tenantHouse,
+                    tenantRent: newTenant.tenantRent
                 },
                 msg: "Tenant registered successfully!"
             })
@@ -31,7 +34,42 @@ const tenantController = {
     },
     getTenants: async (req, res) => {
         try {
-            const tenants = await Tenant.find();
+            let pipeline = [
+                {
+                    $lookup: {
+                        from: "houses",
+                        localField: "tenantHouse",
+                        foreignField: "_id",
+                        as: "house"
+                    }
+                },
+                {
+                    $unwind: {                     
+                        path: "$house",
+                        preserveNullAndEmptyArrays: true 
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,                  
+                        tenantName: 1,
+                        tenantPhone: 1,                    
+                        tenantHouse: 1,             
+                        house_number: "$house.house_number", 
+                        house_location: "$house.house_location",
+                        house_price: "$house.house_price",
+                        createdAt: 1 
+                    }
+                },
+                {
+                    $sort: { 
+                        createdAt: -1
+                    }
+                }
+            ];
+
+            const tenants = await Tenant.aggregate(pipeline);
+            console.log("tenants", tenants);
             res.json(tenants);
         } catch (err) {
             return res.status(500).json({ msg: err.message });

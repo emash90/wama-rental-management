@@ -1,10 +1,11 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
 import SideNav from '../components/SideNav';
+import HouseStatusChart from '../components/HouseStatusChart';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
-const Dashboard = () => {
+const Dashboard = ({ houses }) => {
     const linkStyle = {
         textDecoration: 'none'
     }
@@ -45,6 +46,9 @@ const Dashboard = () => {
                             </Card.Body>
                         </Card>
                     </Link>
+                </Col>
+                <Col>
+                    <HouseStatusChart data={houses} />
                 </Col>
                 <Col>
                     <Link to={'/tenants'} style={linkStyle} >

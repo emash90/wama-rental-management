@@ -5,50 +5,8 @@ import HouseFilters from '../components/HouseFilters'
 import AddHouseModal from '../components/AddHouseModal';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
-const Houses = () => {
-    const [showModal, setShowModal] = useState(false);
-
-    const houses = [
-        {
-            houseNumber: 1,
-            houseType: 'Bungalow',
-            houseLocation: 'Kileleshwa',
-            housePrice: 50000
-        },
-        {
-            houseNumber: 2,
-            houseType: 'Mansion',
-            houseLocation: 'Karen',
-            housePrice: 100000
-        },
-        {
-            houseNumber: 3,
-            houseType: 'Apartment',
-            houseLocation: 'Kilimani',
-            housePrice: 30000
-        },
-        {
-            houseNumber: 4,
-            houseType: 'Bungalow',
-            houseLocation: 'Runda',
-            housePrice: 60000
-        },
-        {
-            houseNumber: 5,
-            houseType: 'Mansion',
-            houseLocation: 'Lavington',
-            housePrice: 80000
-        },
-        {
-            houseNumber: 6,
-            houseType: 'Apartment',
-            houseLocation: 'Westlands',
-            housePrice: 40000
-        }
-    ];
-
-    const handleShowModal = () => setShowModal(true);
-    const handleCloseModal = () => setShowModal(false);
+const Houses = ({ houses, handleHouseAdded, handleEditHouse, handleDeleteHouse, handleCloseModal, handleShowModal, showModal  }) => {
+   
 
     return (
         <>
@@ -79,22 +37,26 @@ const Houses = () => {
                                 <Col key={index} md={6}>
                                     <Card className="mb-3">
                                         <Card.Body>
-                                            <Card.Title>House {house.houseNumber}</Card.Title>
+                                            <Card.Title>House number {house.house_number}</Card.Title>
                                             <Card.Text>
                                                 <div className="d-flex justify-content-between">
                                                     <p>Type</p>
-                                                    <p>{house.houseType}</p>
+                                                    <p>{house.house_type === 0 ? 'Residential' : 'Commercial'}</p>
                                                 </div>
                                                 <div className="d-flex justify-content-between">
                                                     <p>Location</p>
-                                                    <p>{house.houseLocation}</p>
+                                                    <p>{house.house_location}</p>
                                                 </div>
                                                 <div className="d-flex justify-content-between">
                                                     <p>Price</p>
-                                                    <p>{house.housePrice}</p>
+                                                    <p>{house.house_price}</p>
                                                 </div>
                                             </Card.Text>
                                         </Card.Body>
+                                        <Card.Footer className="d-flex justify-content-end">
+                                            <Button variant="primary" className='me-2' onClick={() => handleEditHouse(house)}>Edit</Button>
+                                            <Button variant="danger" onClick={() => handleDeleteHouse(house._id)}>Delete</Button>
+                                        </Card.Footer>
                                     </Card>
                                 </Col>
                             ))}
@@ -102,7 +64,7 @@ const Houses = () => {
                     </Col>
                 </Row>
             </Container>
-            <AddHouseModal show={showModal} handleClose={handleCloseModal} />
+            <AddHouseModal showModal={showModal} handleCloseModal={handleCloseModal} handleHouseAdded={handleHouseAdded} />
         </>
     );
 };

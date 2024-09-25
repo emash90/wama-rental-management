@@ -2,9 +2,10 @@ import React from 'react'
 import NavBar from '../components/NavBar'
 import SideNav from '../components/SideNav'
 import PaymentFilters from '../components/PaymentFilters'
+import AddPaymentModal from '../components/AddPaymentModal'
 import { Container, Row, Col, Table, Button, Form } from 'react-bootstrap';
 
-const Payments = () => {
+const Payments = ({ showPaymentModal, handleClosePaymentModal, handleShowPaymentModal, addPayment, allTenants }) => {
     const payments = [
         {
             paymentId: 1,
@@ -49,6 +50,8 @@ const Payments = () => {
             paymentHouse: 6
         }
     ]
+
+
   return (
     <>
         <NavBar />
@@ -62,7 +65,7 @@ const Payments = () => {
                     <Col>
                         <div className="d-flex justify-content-between" style={{ marginBottom: '1rem' }}>
                             <h1>Payments</h1>
-                            <Button variant="primary" >Add Payment</Button>
+                            <Button variant="primary" onClick={handleShowPaymentModal}>Add Payment</Button>
                         </div>
                     </Col>
                 </Row>
@@ -98,6 +101,7 @@ const Payments = () => {
             </Col>
             </Row>
         </Container>
+        <AddPaymentModal showPaymentModal={showPaymentModal} handleClosePaymentModal={handleClosePaymentModal} handleShowPaymentModal={handleShowPaymentModal} addPayment={addPayment} allTenants={allTenants} />
     </>
   )
 }

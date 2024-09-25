@@ -1,47 +1,10 @@
 import React from 'react'
 import NavBar from '../components/NavBar'
 import SideNav from '../components/SideNav'
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import AddTenantModal from '../components/AddTenantModal';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
-const Tenants = () => {
-    const tenants = [
-        {
-            tenantName: 'John Doe',
-            tenantPhone: '0712345678',
-            tenantHouse: 1,
-            tenantRent: 5000
-        },
-        {
-            tenantName: 'Jane Doe',
-            tenantPhone: '0712345678',
-            tenantHouse: 2,
-            tenantRent: 10000
-        },
-        {
-            tenantName: 'Alice Doe',
-            tenantPhone: '0712345678',
-            tenantHouse: 3,
-            tenantRent: 3000
-        },
-        {
-            tenantName: 'Bob Doe',
-            tenantPhone: '0712345678',
-            tenantHouse: 4,
-            tenantRent: 6000
-        },
-        {
-            tenantName: 'Eve Doe',
-            tenantPhone: '0712345678',
-            tenantHouse: 5,
-            tenantRent: 8000
-        },
-        {
-            tenantName: 'Wendy Doe',
-            tenantPhone: '0712345678',
-            tenantHouse: 6,
-            tenantRent: 4000
-        }
-    ]
+const Tenants = ({ houses, allTenants, showTenantModal, handleCloseTenantModal, handleShowTenantModal, addTenant }) => {
   return (
     <>
         <NavBar />
@@ -51,9 +14,14 @@ const Tenants = () => {
                 <SideNav />
             </Col>
             <Col md={9} className="p-3">
-                <h1>Tenants</h1>
                 <Row>
-                    {tenants.map((tenant, index) => (
+                    <Col className="d-flex justify-content-between">
+                        <h1>Tenants</h1>
+                        <Button variant="primary" className="mb-3" onClick={handleShowTenantModal}>Add Tenant</Button>
+                    </Col>
+                </Row>
+                <Row>
+                    {allTenants.length > 0 ? allTenants.map((tenant, index) => (
                         <Col key={index} md={4}>
                             <Card className="mb-3">
                                 <Card.Body>
@@ -65,21 +33,22 @@ const Tenants = () => {
                                         </div>
                                         <div className="d-flex justify-content-between">
                                             <p>House</p>
-                                            <p>{tenant.tenantHouse}</p>
+                                            <p>{tenant.house_number}</p>
                                         </div>
                                         <div className="d-flex justify-content-between">
                                             <p>Rent</p>
-                                            <p>{tenant.tenantRent}</p>
+                                            <p>{tenant.house_price}</p>
                                         </div>
                                     </Card.Text>
                                 </Card.Body>
                             </Card>
                         </Col>
-                    ))}
+                    )) : <p>No tenants found</p>}
                 </Row>
             </Col>
             </Row>
         </Container>
+        <AddTenantModal showTenantModal={showTenantModal} handleCloseTenantModal={handleCloseTenantModal} handleShowTenantModal={handleShowTenantModal} houses={houses} addTenant={addTenant} />
     </>
   )
 }

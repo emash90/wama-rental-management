@@ -6,7 +6,7 @@ const houseController = {
             const { house_number, house_type, house_location, house_price } = req.body;
 
             const house = await House.findOne({ house_number });
-
+            console.log("house", house);
             if (house) return res.status(400).json({ msg: "The house number already exists." });
 
             const newHouse = new House({
@@ -53,7 +53,7 @@ const houseController = {
                 house_number, house_type, house_location, house_price
             });
 
-            res.json({ msg: "House updated successfully!" });
+            res.status(200).json({ msg: "House updated successfully!" });
 
         } catch (err) {
             return res.status(500).json({ msg: err.message });
@@ -65,7 +65,7 @@ const houseController = {
             if (!house) return res.status(400).json({ msg: "House not found!" });
 
             await House.findByIdAndDelete(req.params.id);
-            res.json({ msg: "House deleted successfully!" });
+            res.status(200).json({ msg: "House deleted successfully!" });
 
         } catch (err) {
             return res.status(500).json({ msg: err.message });

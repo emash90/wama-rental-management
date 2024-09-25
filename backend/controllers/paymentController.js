@@ -1,28 +1,34 @@
 const Payment = require('../models/paymentModel');
+const House = require('../models/houseModel');
 
 
 const paymentController = {
     addPayment: async (req, res) => {
         try {
-            const { tenant_id, house_id, amount, month, year } = req.body;
-
-            const payment = await Payment.findOne({ tenant: tenant_id, house: house_id, month, year });
-
+            const { tenant_id, house_number, amount, amount_paid, balance, date_paid, full_payment, payment_mode, month } = req.body;
+            const house_id = await House.findOne({ house_number: house_number }).select('_id');
+            if (!house_id) return res.status(400).json({ msg: "House does not exist." });
+            
+            const payment = await Payment.findOne({ tenant_id, house_id, month });
             if (payment) return res.status(400).json({ msg: "Payment already exists for this month. Please update instead." });
 
             const newPayment = new Payment({
-                tenant: tenant_id, house: house_id, amount, month, year
+                tenant_id, house_id, amount, amount_paid, balance, date_paid, full_payment, payment_mode, month
             });
-
+            console.log("newPayment", newPayment);
             await newPayment.save();
 
             return res.status(201).json({
                 payment: {
-                    tenant: newPayment.tenant,
-                    house: newPayment.house,
+                    tenant_id: newPayment.tenant_id,
+                    house_id: newPayment.house_id,
                     amount: newPayment.amount,
-                    month: newPayment.month,
-                    year: newPayment.year
+                    amount_paid: newPayment.amount_paid,
+                    balance: newPayment.balance,
+                    date_paid: newPayment.date_paid,
+                    full_payment: newPayment.full_payment,
+                    payment_mode: newPayment.payment_mode,
+                    month: newPayment.month
                 },
                 msg: "Payment added successfully!"
             })
