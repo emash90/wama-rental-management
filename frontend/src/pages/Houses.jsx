@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import NavBar from '../components/NavBar';
 import SideNav from '../components/SideNav';
-import HouseFilters from '../components/HouseFilters'
-import AddHouseModal from '../components/AddHouseModal';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import HouseFilters from '../components/HouseFilters';
+import AddHouseModal from '../components/modals/AddHouseModal';
+import { Container, Row, Col, Card, Button, Spinner, Alert } from 'react-bootstrap';
+import useFetchHouses from '../hooks/useFetchHouses'
 
-const Houses = ({ houses, handleHouseAdded, handleEditHouse, handleDeleteHouse, handleCloseModal, handleShowModal, showModal  }) => {
-   
+const Houses = ({ handleHouseAdded, handleEditHouse, handleDeleteHouse, handleCloseModal, handleShowModal, showModal }) => {
+    const { houses, loading, error } = useFetchHouses(); // Use the custom hook
 
     return (
         <>
@@ -25,15 +26,33 @@ const Houses = ({ houses, handleHouseAdded, handleEditHouse, handleDeleteHouse, 
                                 </div>
                             </Col>
                         </Row>
-                        <Row >
+                        <Row>
                             <h4>Filters</h4>
                             <Col className='mb-3'>
-                                < HouseFilters />
+                                <HouseFilters />
                             </Col>
-                            <hr></hr>
+                            <hr />
                         </Row>
                         <Row className="mb-3">
-                            {houses.map((house, index) => (
+                            {loading && (
+                                <Col className="text-center">
+                                    <Spinner animation="border" />
+                                    <p>Loading houses...</p>
+                                </Col>
+                            )}
+                            {error && (
+                                <Col>
+                                    <Alert variant="danger">
+                                        Error loading houses: {error.message}
+                                    </Alert>
+                                </Col>
+                            )}
+                            {!loading && !error && houses.length === 0 && (
+                                <Col>
+                                    <Alert variant="info">No houses found.</Alert>
+                                </Col>
+                            )}
+                            {!loading && !error && houses.map((house, index) => (
                                 <Col key={index} md={6}>
                                     <Card className="mb-3">
                                         <Card.Body>

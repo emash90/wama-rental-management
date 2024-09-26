@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { houseAPI } from '../APIs/Apis';
+import { houseAPI } from '../../APIs/Apis'
 
 const AddHouseModal = ({ showModal, handleCloseModal, handleHouseAdded, houseToEdit, editHouse }) => {
     const [houseData, setHouseData] = useState({

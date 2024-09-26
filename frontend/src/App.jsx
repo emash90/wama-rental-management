@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Houses from './pages/Houses';
 import Tenants from './pages/Tenants';
 import Payments from './pages/Payments';
-import  AddHouseModal  from './components/AddHouseModal';
+import  AddHouseModal  from './components/modals/AddHouseModal';
 import { houseAPI } from './APIs/Apis';
 import { paymentAPI } from './APIs/Apis';
 import { tenantAPI } from './APIs/Apis';
@@ -19,6 +19,7 @@ function App() {
   const [allTenants, setAllTenants] = useState([])
   const [refresh, setRefresh] = useState(false); 
   const [houseToEdit, setHouseToEdit] = useState(null);
+  const [payments, setPayments] = useState([])
 
   const handleShowTenantModal = () => setShowTenantModal(true);
   const handleCloseTenantModal = () => setShowTenantModal(false);
@@ -76,6 +77,8 @@ function App() {
     deleteHouse();
   }
 
+
+  
   const addPayment = async (payment) => {
     console.log("payment to save", payment)
     try {
@@ -88,6 +91,7 @@ function App() {
       console.error("error", error);
     }
   }
+  
 
   const fetchTenants = async () => {
     const response = await tenantAPI.getTenants();
@@ -121,7 +125,7 @@ function App() {
           <Route path="/" element={<Dashboard houses={houses} />} />
           <Route path="/houses" element={< Houses houses={houses} handleHouseAdded={handleHouseAdded} handleEditHouse={handleEditHouse} handleDeleteHouse={handleDeleteHouse} handleCloseModal={handleCloseModal} handleShowModal={handleShowModal} showModal={showModal} />} />
           <Route path="/tenants" element={< Tenants allTenants={allTenants} handleShowTenantModal={handleShowTenantModal} handleCloseTenantModal={handleCloseTenantModal} showTenantModal={showTenantModal} houses={houses} addTenant={addTenant} />} />
-          <Route path="/payments" element={< Payments  showPaymentModal={showPaymentModal} handleClosePaymentModal={handleClosePaymentModal} handleShowPaymentModal={handleShowPaymentModal} addPayment={addPayment} allTenants={allTenants} />} />
+          <Route path="/payments" element={< Payments  showPaymentModal={showPaymentModal} handleClosePaymentModal={handleClosePaymentModal} handleShowPaymentModal={handleShowPaymentModal} addPayment={addPayment} allTenants={allTenants} payment={payments} />} />
         </Routes>
       </Router>
       <AddHouseModal showModal={showModal} handleCloseModal={handleCloseModal} handleHouseAdded={handleHouseAdded} houseToEdit={houseToEdit} editHouse={editHouse} />

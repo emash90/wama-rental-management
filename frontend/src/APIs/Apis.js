@@ -62,7 +62,7 @@ const tenantAPI = {
         try {
             const response = await axios.get(`${baseURL}/tenants/get_tenants`);
             console.log("all tenants", response)
-            return response
+            return response.data
         } catch (error) {
             console.error(error);
         }

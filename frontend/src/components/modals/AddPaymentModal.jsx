@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
+import useFetchTenants from '../../hooks/useFetchTenants'; // Import the custom hook
 
-const AddPaymentModal = ({ showPaymentModal, handleClosePaymentModal, addPayment, paymentToEdit, allTenants }) => {
+const AddPaymentModal = ({ showPaymentModal, handleClosePaymentModal, addPayment, paymentToEdit }) => {
+    
+    const { tenants } = useFetchTenants()
+
     const [paymentData, setPaymentData] = useState({
         tenant_id: '',
         house_number: '',
@@ -13,7 +17,6 @@ const AddPaymentModal = ({ showPaymentModal, handleClosePaymentModal, addPayment
         date_paid: '',
         month: ''
     });
-
     useEffect(() => {
         if (paymentToEdit) {
             setPaymentData({
@@ -54,14 +57,14 @@ const AddPaymentModal = ({ showPaymentModal, handleClosePaymentModal, addPayment
             let newData = { ...prevData, [name]: type === 'checkbox' ? checked : value };
 
             if (name === 'tenant_id') {
-                const selectedTenant = allTenants.find((tenant) => tenant._id === value);
+                const selectedTenant = tenants.find((tenant) => tenant._id === value);
                 if (selectedTenant) {
                     console.log("selectedTenant", selectedTenant);
                     newData = {
                         ...newData,
-                        house_number: selectedTenant.house,
-                        amount_due: selectedTenant.tenantRent,
-                        balance: selectedTenant.tenantRent - newData.amount_paid
+                        house_number: selectedTenant.house_number,
+                        amount_due: selectedTenant.house_price + (selectedTenant.balance ? selectedTenant.balance : 0),
+                        balance: selectedTenant.house_price - newData.amount_paid
                     };
                 } else {
                     newData = {
@@ -74,26 +77,27 @@ const AddPaymentModal = ({ showPaymentModal, handleClosePaymentModal, addPayment
             }
 
             if (name === 'full_payment') {
-                const selectedTenant = allTenants.find((tenant) => tenant._id === prevData.tenant_id);
+                const selectedTenant = tenants.find((tenant) => tenant._id === prevData.tenant_id);
                 if (selectedTenant) {
                     if (checked) {
                         newData = {
                             ...newData,
-                            amount_paid: selectedTenant.tenantRent,
+                            amount_due: selectedTenant.house_price + (selectedTenant.balance ? selectedTenant.balance : 0),
+                            amount_paid: selectedTenant.house_price + (selectedTenant.balance ? selectedTenant.balance : 0),
                             balance: 0
                         };
                     } else {
                         newData = {
                             ...newData,
                             amount_paid: '',
-                            balance: selectedTenant.tenantRent
+                            balance: selectedTenant.house_price + selectedTenant.balance ? selectedTenant.balance : 0
                         };
                     }
                 }
             }
 
             if (name === 'amount_paid' && !prevData.full_payment) {
-                const selectedTenant = allTenants.find((tenant) => tenant._id === prevData.tenant_id);
+                const selectedTenant = tenants.find((tenant) => tenant._id === prevData.tenant_id);
                 if (selectedTenant) {
                     newData = {
                         ...newData,
@@ -122,10 +126,10 @@ const AddPaymentModal = ({ showPaymentModal, handleClosePaymentModal, addPayment
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>Tenant</Form.Label>
-                        {allTenants.length > 0 ? (
+                        {tenants.length > 0 ? (
                             <Form.Select name="tenant_id" value={paymentData.tenant_id} onChange={handlePaymentDataChange}>
                                 <option value="">Select Tenant</option>
-                                {allTenants.map((tenant) => (
+                                {tenants.map((tenant) => (
                                     <option key={tenant._id} value={tenant._id}>{tenant.tenantName}</option>
                                 ))}
                             </Form.Select>
