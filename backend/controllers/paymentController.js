@@ -5,15 +5,17 @@ const House = require('../models/houseModel');
 const paymentController = {
     addPayment: async (req, res) => {
         try {
-            const { tenant_id, house_number, amount, amount_paid, balance, date_paid, full_payment, payment_mode, month } = req.body;
+            console.log("req", req.body)
+            const { tenant_id, house_number, amount_due, amount_paid, balance, date_paid, full_payment, payment_mode, month } = req.body;
             const house_id = await House.findOne({ house_number: house_number }).select('_id');
+            console.log("house id",house_id )
             if (!house_id) return res.status(400).json({ msg: "House does not exist." });
             
             const payment = await Payment.findOne({ tenant_id, house_id, month });
             if (payment) return res.status(400).json({ msg: "Payment already exists for this month. Please update instead." });
 
             const newPayment = new Payment({
-                tenant_id, house_id, amount, amount_paid, balance, date_paid, full_payment, payment_mode, month
+                tenant_id, house_id, amount_due, amount_paid, balance, date_paid, full_payment, payment_mode, month
             });
             console.log("newPayment", newPayment);
             await newPayment.save();
@@ -22,7 +24,7 @@ const paymentController = {
                 payment: {
                     tenant_id: newPayment.tenant_id,
                     house_id: newPayment.house_id,
-                    amount: newPayment.amount,
+                    amount_due: newPayment.amount_due,
                     amount_paid: newPayment.amount_paid,
                     balance: newPayment.balance,
                     date_paid: newPayment.date_paid,
@@ -39,12 +41,21 @@ const paymentController = {
     },
     getPayments: async (req, res) => {
         try {
-            const payments = await Payment.find();
+            const payments = await Payment.find()
+                .populate({
+                    path: 'house_id',
+                    select: 'house_number'
+                })
+                .populate({
+                    path: 'tenant_id',
+                    select: 'tenantName' 
+                });
+    
             res.json(payments);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
-    },
+    },    
     getPayment: async (req, res) => {
         try {
             const payment = await Payment.findById(req.params.id);

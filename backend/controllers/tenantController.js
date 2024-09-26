@@ -34,47 +34,76 @@ const tenantController = {
     },
     getTenants: async (req, res) => {
         try {
+            // Aggregation pipeline
             let pipeline = [
+                // First, lookup house details and unwind the result
                 {
                     $lookup: {
-                        from: "houses",
-                        localField: "tenantHouse",
-                        foreignField: "_id",
-                        as: "house"
+                        from: "houses",                // Lookup from the houses collection
+                        localField: "tenantHouse",     // Match tenant's house field
+                        foreignField: "_id",           // Match house's _id field
+                        as: "house"                    // The name for the joined data
                     }
                 },
                 {
                     $unwind: {                     
-                        path: "$house",
-                        preserveNullAndEmptyArrays: true 
+                        path: "$house",                 // Unwind the house field to get the first matching result
+                        preserveNullAndEmptyArrays: true // Keep tenants even if they don't have house data
+                    }
+                },
+    
+                // Then, lookup payment details and unwind the result
+                {
+                    $lookup: {
+                        from: "payments",               // Lookup from the payments collection
+                        localField: "tenantId",              // Match tenant's _id with payment's tenantId field
+                        foreignField: "_Id",       // The field in payments referencing tenant
+                        as: "payments"                 // The name for the joined payment data
                     }
                 },
                 {
+                    $unwind: {                     
+                        path: "$payments",              // Unwind the payments field to get the first matching result
+                        preserveNullAndEmptyArrays: true // Keep tenants even if they don't have payment data
+                    }
+                },
+    
+                // Now, project all the necessary fields
+                {
                     $project: {
-                        _id: 1,                  
-                        tenantName: 1,
-                        tenantPhone: 1,                    
-                        tenantHouse: 1,             
+                        _id: 1,
+                        tenantName: 1,  
+                        tenantPhone: 1, 
+                        tenantHouse: 1,
+                        
                         house_number: "$house.house_number", 
                         house_location: "$house.house_location",
                         house_price: "$house.house_price",
+                        
+                        lastPaymentDate: "$payments.paymentDate",
+                        lastPaymentAmount: "$payments.amount",
+                        balance: "$payments.balance",
+    
                         createdAt: 1 
                     }
                 },
+    
                 {
                     $sort: { 
                         createdAt: -1
                     }
                 }
             ];
-
+    
             const tenants = await Tenant.aggregate(pipeline);
             console.log("tenants", tenants);
+    
             res.json(tenants);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
     },
+    
     getTenant: async (req, res) => {
         try {
             const tenant = await Tenant.findById(req.params.id);

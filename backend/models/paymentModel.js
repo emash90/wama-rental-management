@@ -11,7 +11,7 @@ const paymentSchema = new mongoose.Schema({
         ref: 'Houses',
         required: true
     },
-    amount: {
+    amount_due: {
         type: Number,
         required: true
     },
